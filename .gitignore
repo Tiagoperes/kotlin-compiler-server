@@ -3,6 +3,9 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**
 !**/src/test/**
+1.4.30
+1.4.30-js
+indexes.json
 
 ### STS ###
 .apt_generated

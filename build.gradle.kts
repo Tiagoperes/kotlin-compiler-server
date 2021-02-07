@@ -6,6 +6,8 @@ val kotlinVersion: String by System.getProperties()
 val kotlinIdeVersion: String by System.getProperties()
 val policy: String by System.getProperties()
 val indexes: String by System.getProperties()
+val beagleVersion = "1.5.0"
+val jacksonVersion = "2.12.1"
 
 group = "com.compiler.server"
 version = "$kotlinVersion-SNAPSHOT"
@@ -18,12 +20,12 @@ val kotlinJsDependency: Configuration by configurations.creating {
     isTransitive = false
     attributes {
         attribute(
-            KotlinPlatformType.attribute,
-            KotlinPlatformType.js
+                KotlinPlatformType.attribute,
+                KotlinPlatformType.js
         )
         attribute(
-            KotlinJsCompilerAttribute.jsCompilerAttribute,
-            KotlinJsCompilerAttribute.legacy
+                KotlinJsCompilerAttribute.jsCompilerAttribute,
+                KotlinJsCompilerAttribute.legacy
         )
     }
 }
@@ -57,7 +59,7 @@ allprojects {
     }
     afterEvaluate {
         dependencies {
-            implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.1")
+            implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
         }
     }
 }
@@ -65,9 +67,9 @@ allprojects {
 dependencies {
     kotlinDependency("junit:junit:4.12")
     kotlinDependency("org.hamcrest:hamcrest:2.2")
-    kotlinDependency("com.fasterxml.jackson.core:jackson-databind:2.12.1")
-    kotlinDependency("com.fasterxml.jackson.core:jackson-core:2.12.1")
-    kotlinDependency("com.fasterxml.jackson.core:jackson-annotations:2.12.1")
+    kotlinDependency("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
+    kotlinDependency("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
+    kotlinDependency("com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion")
     // Kotlin libraries
     kotlinDependency("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
     kotlinDependency("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion")
@@ -75,8 +77,19 @@ dependencies {
     kotlinDependency("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
     kotlinDependency("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.4.2")
     kotlinJsDependency("org.jetbrains.kotlin:kotlin-stdlib-js:$kotlinVersion")
+    // Beagle
+    kotlinDependency("br.com.zup.beagle:kotlin-core:$beagleVersion")
+    kotlinDependency("br.com.zup.beagle:framework:$beagleVersion")
+    kotlinDependency("br.com.zup.beagle:backend-widgets-dsl:$beagleVersion")
+    kotlinDependency("br.com.zup.beagle:backend-widgets:$beagleVersion")
+    kotlinDependency("br.com.zup.beagle:annotation:$beagleVersion")
+    // Beagle dependencies
+    kotlinDependency("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.1")
+    kotlinDependency("org.jetbrains.kotlin:kotlin-reflect:1.4.21")
+
 
     annotationProcessor("org.springframework:spring-context-indexer")
+    // implementation("br.com.zup.beagle:framework:$beagleVersion")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.amazonaws.serverless:aws-serverless-java-container-springboot2:1.5.2")
     implementation("junit:junit:4.12")
