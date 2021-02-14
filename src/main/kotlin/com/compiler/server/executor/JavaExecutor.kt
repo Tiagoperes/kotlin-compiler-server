@@ -112,6 +112,7 @@ class CommandLineArgument(
     return (listOf(
       "java",
       "-Xmx" + memoryLimit + "M",
+      // "-Djava.security.manager=SecurityManagerDebugger",
       "-Djava.security.manager",
       "-Djava.security.policy=$policy",
       "-ea",

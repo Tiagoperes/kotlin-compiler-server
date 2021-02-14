@@ -8,6 +8,7 @@ private fun toFunctionName(fileName: String): String {
 }
 
 private fun toBeagleFile(name: String, content: String): String {
+    // attention, after altering this code, make sure to also update the constant LINES_FN_DECLARATION
     val code = listOf(
             "fun ${toFunctionName(name)}(): Any {",
             "return (",
@@ -41,7 +42,7 @@ fun toBeagleProject(project: Map<String, String>): Project {
         )
     }
     val mainFile = ProjectFile(
-            name = "__main-generated-compiler",
+            name = "__main-generated-compiler.kt",
             text = createBeagleMain(project.keys),
     )
     return Project(files = beagleFiles + listOf(mainFile))

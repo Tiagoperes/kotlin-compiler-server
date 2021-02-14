@@ -31,21 +31,28 @@ private fun fixErrorPositions(error: ErrorDescriptor): ErrorDescriptor {
     )
 }
 
-private fun fixErrorMap(errors: Map<String, List<ErrorDescriptor>>): Map<String, List<ErrorDescriptor>> {
+private fun getNumberOfLinesInScript(script: String): Int {
+    return script.split("\n").size
+}
+
+private fun fixErrorMap(errors: Map<String, List<ErrorDescriptor>>, project: Map<String, String>): Map<String, List<ErrorDescriptor>> {
     val fixed = HashMap<String, List<ErrorDescriptor>>()
     errors.forEach() {
         fixed[it.key] = it.value.map() { error ->
             fixErrorPositions(error)
+        }.filter { error -> // filter out errors in lines included by us, i.e. that don't exist in the original project
+            val script = project[it.key]
+            if (script == null) true else error.interval.start.line <= getNumberOfLinesInScript(script)
         }
     }
     return fixed
 }
 
-class BeagleResult(executionResult: ExecutionResult) : ExecutionResult() {
+class BeagleResult(executionResult: ExecutionResult, project: Map<String, String>) : ExecutionResult() {
     val files = getCompiledJsons(executionResult.text)
 
     init {
-        this.errors = fixErrorMap(executionResult.errors)
+        this.errors = fixErrorMap(executionResult.errors, project)
         this.exception = executionResult.exception
         this.text = getConsoleOutput(executionResult.text)
     }

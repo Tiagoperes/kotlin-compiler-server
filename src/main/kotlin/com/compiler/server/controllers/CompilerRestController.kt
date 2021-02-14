@@ -15,7 +15,7 @@ class CompilerRestController(private val kotlinProjectExecutor: KotlinProjectExe
   fun executeKotlinProjectEndpoint(@RequestBody project: Project) = kotlinProjectExecutor.run(project)
 
   @PostMapping("/run-beagle")
-  fun executeBeagleProjectEndpoint(@RequestBody project: Map<String, String>) = BeagleResult(kotlinProjectExecutor.run(toBeagleProject(project)))
+  fun executeBeagleProjectEndpoint(@RequestBody project: Map<String, String>) = BeagleResult(kotlinProjectExecutor.run(toBeagleProject(project)), project)
 
   @PostMapping("/test")
   fun testKotlinProjectEndpoint(@RequestBody project: Project) = kotlinProjectExecutor.test(project)

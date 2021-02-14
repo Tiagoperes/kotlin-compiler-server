@@ -15,7 +15,12 @@ private val imports = listOf(
         "br.com.zup.beagle.action.*",
         "br.com.zup.beagle.analytics.*",
         "br.com.zup.beagle.constants.*",
-        "br.com.zup.beagle.context.*"
+        "br.com.zup.beagle.context.*",
+        "br.com.zup.beagle.builder.widget.*",
+        "br.com.zup.beagle.core.*",
+        "br.com.zup.beagle.ext.*",
+        "br.com.zup.beagle.layout.*",
+        "br.com.zup.beagle.action.*"
 )
 
 val importsCode =  imports.map {
@@ -24,5 +29,6 @@ val importsCode =  imports.map {
 
 const val RESULT_PREFIX = ":::START-COMPILER-RESULT:::"
 const val RESULT_SUFFIX = ":::END-COMPILER-RESULT:::"
+// numbers of lines added before the script's original content to declare its wrapping function
 const val LINES_FN_DECLARATION = 2
 val linesBeforeContent = LINES_FN_DECLARATION + imports.size
