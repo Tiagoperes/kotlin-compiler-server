@@ -23,7 +23,7 @@ COPY --from=build /kotlin-compiler-server/${KOTLIN_LIB_JS} /kotlin-compiler-serv
 COPY --from=build /kotlin-compiler-server/executor.policy /kotlin-compiler-server/
 COPY --from=build /kotlin-compiler-server/indexes.json /kotlin-compiler-server/
 
-ENV PORT=8080
+5ENV PORT=3001
 
 CMD ["java", "-noverify", \
     "-Dserver.port=${PORT}", \

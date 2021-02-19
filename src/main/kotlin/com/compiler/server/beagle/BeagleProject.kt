@@ -4,7 +4,8 @@ import com.compiler.server.model.Project
 import com.compiler.server.model.ProjectFile
 
 private fun toFunctionName(fileName: String): String {
-    return "__${fileName.replace(".", "")}"
+    val withoutSpecialChars = fileName.replace(".", "_dot_").replace("-", "_hyphen_")
+    return "__$withoutSpecialChars"
 }
 
 private fun toBeagleFile(name: String, content: String): String {
