@@ -7,7 +7,8 @@ val kotlinIdeVersion: String by System.getProperties()
 val policy: String by System.getProperties()
 val indexes: String by System.getProperties()
 val beagleVersion = "1.7.0"
-val jacksonVersion = "2.12.1"
+val jacksonVersion = "2.12.3"
+val indexesJs: String by System.getProperties()
 
 group = "com.compiler.server"
 version = "$kotlinVersion-SNAPSHOT"
@@ -43,7 +44,7 @@ val copyJSDependencies by tasks.creating(Copy::class) {
 }
 
 plugins {
-    id("org.springframework.boot") version "2.4.2"
+    id("org.springframework.boot") version "2.4.5"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("jvm") version "1.4.30"
     kotlin("plugin.spring") version "1.4.30"
@@ -59,7 +60,12 @@ allprojects {
     }
     afterEvaluate {
         dependencies {
-            implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
+            dependencies {
+                implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
+                implementation("org.jetbrains.kotlin:idea:202-$kotlinIdeVersion-IJ8194.7") {
+                    isTransitive = false
+                }
+            }
         }
     }
 }
@@ -75,7 +81,7 @@ dependencies {
     kotlinDependency("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion")
     kotlinDependency("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     kotlinDependency("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
-    kotlinDependency("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.4.2")
+    kotlinDependency("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.4.3")
     kotlinJsDependency("org.jetbrains.kotlin:kotlin-stdlib-js:$kotlinVersion")
     // Beagle
     kotlinDependency("br.com.zup.beagle:kotlin-core:$beagleVersion")
@@ -105,16 +111,13 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-compiler-for-ide:$kotlinVersion")
     implementation("org.jetbrains.kotlin:common:202-$kotlinIdeVersion-IJ8194.7")
     implementation("org.jetbrains.kotlin:core:202-$kotlinIdeVersion-IJ8194.7")
-    implementation("org.jetbrains.kotlin:idea:202-$kotlinIdeVersion-IJ8194.7") {
-        isTransitive = false
-    }
     implementation(project(":executors", configuration = "default"))
     implementation(project(":common", configuration = "default"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3")
 }
 
 fun buildPropertyFile() {
@@ -130,6 +133,7 @@ fun generateProperties(prefix: String = "") = """
     kotlin.version=${kotlinVersion}
     policy.file=${prefix + policy}
     indexes.file=${prefix + indexes}
+    indexesJs.file=${prefix + indexesJs}
     libraries.folder.jvm=${prefix + libJVMFolder}
     libraries.folder.js=${prefix + libJSFolder}
 """.trimIndent()
@@ -156,6 +160,7 @@ val buildLambda by tasks.creating(Zip::class) {
     }
     from(policy)
     from(indexes)
+    from(indexesJs)
     from(libJSFolder) { into(libJSFolder) }
     from(libJVMFolder) { into(libJVMFolder) }
     into("lib") {

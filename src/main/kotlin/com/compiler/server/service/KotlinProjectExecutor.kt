@@ -5,6 +5,7 @@ import com.compiler.server.compiler.components.*
 import com.compiler.server.model.*
 import common.model.Completion
 import com.compiler.server.model.bean.VersionInfo
+import component.KotlinEnvironment
 import org.apache.commons.logging.LogFactory
 import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment
 import org.springframework.stereotype.Component
@@ -38,7 +39,24 @@ class KotlinProjectExecutor(
   fun convertToJs(project: Project): TranslationJSResult {
     return kotlinEnvironment.environment { environment ->
       val files = getFilesFrom(project, environment).map { it.kotlinFile }
-      kotlinToJSTranslator.translate(files, project.args.split(" "), environment)
+      kotlinToJSTranslator.translate(
+        files,
+        project.args.split(" "),
+        environment,
+        kotlinToJSTranslator::doTranslate
+      )
+    }
+  }
+
+  fun convertToJsIr(project: Project): TranslationJSResult {
+    return kotlinEnvironment.environment { environment ->
+      val files = getFilesFrom(project, environment).map { it.kotlinFile }
+      kotlinToJSTranslator.translate(
+        files,
+        project.args.split(" "),
+        environment,
+        kotlinToJSTranslator::doTranslateWithIr
+      )
     }
   }
 
@@ -46,7 +64,7 @@ class KotlinProjectExecutor(
     return kotlinEnvironment.environment {
       val file = getFilesFrom(project, it).first()
       try {
-        val isJs = project.confType == ProjectType.JS
+        val isJs = project.confType.isJsRelated()
         completionProvider.complete(file, line, character, isJs, it)
       } catch (e: Exception) {
         log.warn("Exception in getting completions. Project: $project", e)
@@ -59,12 +77,11 @@ class KotlinProjectExecutor(
     return kotlinEnvironment.environment { environment ->
       val files = getFilesFrom(project, environment).map { it.kotlinFile }
       try {
-        val isJs = (project.confType == ProjectType.JS)
+        val isJs = project.confType.isJsRelated()
         errorAnalyzer.errorsFrom(
           files = files,
           coreEnvironment = environment,
-          isJs = isJs,
-          withImports = !isJs
+          isJs = isJs
         ).errors
       } catch (e: Exception) {
         log.warn("Exception in getting highlight. Project: $project", e)
