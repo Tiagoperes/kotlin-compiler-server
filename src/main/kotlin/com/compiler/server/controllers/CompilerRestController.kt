@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping(value = ["/api/compiler", "/api/**/compiler"])
 class CompilerRestController(private val kotlinProjectExecutor: KotlinProjectExecutor) {
-  // @PostMapping("/run")
+  @PostMapping("/run")
   fun executeKotlinProjectEndpoint(@RequestBody project: Project) = kotlinProjectExecutor.run(project)
 
-  @PostMapping("/run")
+  @PostMapping("/run-beagle")
   fun executeBeagleProjectEndpoint(@RequestBody project: Map<String, String>) = BeagleResult(kotlinProjectExecutor.run(toBeagleProject(project)), project)
 
   @PostMapping("/test")
@@ -33,7 +33,7 @@ class CompilerRestController(private val kotlinProjectExecutor: KotlinProjectExe
     @RequestParam ch: Int
   ) = kotlinProjectExecutor.complete(project, line, ch)
 
-  // @PostMapping("/complete")
+  @PostMapping("/complete-beagle")
   fun getBeagleCompleteEndpoint(
     @RequestBody project: Project,
     @RequestParam line: Int,
