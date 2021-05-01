@@ -1,11 +1,14 @@
 package com.compiler.server.controllers
 
+import com.compiler.server.beagle.AutoCompleteRequest
 import com.compiler.server.beagle.BeagleResult
+import com.compiler.server.beagle.prepareForAutoComplete
 import com.compiler.server.beagle.toBeagleProject
 import com.compiler.server.model.ErrorDescriptor
 import com.compiler.server.model.Project
 import com.compiler.server.model.bean.VersionInfo
 import com.compiler.server.service.KotlinProjectExecutor
+import common.model.Completion
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -29,6 +32,16 @@ class CompilerRestController(private val kotlinProjectExecutor: KotlinProjectExe
     @RequestParam line: Int,
     @RequestParam ch: Int
   ) = kotlinProjectExecutor.complete(project, line, ch)
+
+  @PostMapping("/complete-beagle")
+  fun getBeagleCompleteEndpoint(
+    @RequestBody project: Project,
+    @RequestParam line: Int,
+    @RequestParam ch: Int
+  ): List<Completion> {
+    val prepared = prepareForAutoComplete(AutoCompleteRequest(project, line, ch))
+    return kotlinProjectExecutor.complete(prepared.project, prepared.line, prepared.ch)
+  }
 
   @PostMapping("/highlight")
   fun highlightEndpoint(@RequestBody project: Project) : Map<String, List<ErrorDescriptor>> = kotlinProjectExecutor.highlight(project)

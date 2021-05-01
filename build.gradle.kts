@@ -6,7 +6,7 @@ val kotlinVersion: String by System.getProperties()
 val kotlinIdeVersion: String by System.getProperties()
 val policy: String by System.getProperties()
 val indexes: String by System.getProperties()
-val beagleVersion = "1.5.0"
+val beagleVersion = "1.7.0"
 val jacksonVersion = "2.12.1"
 
 group = "com.compiler.server"

@@ -31,4 +31,5 @@ const val RESULT_PREFIX = ":::START-COMPILER-RESULT:::"
 const val RESULT_SUFFIX = ":::END-COMPILER-RESULT:::"
 // numbers of lines added before the script's original content to declare its wrapping function
 const val LINES_FN_DECLARATION = 2
+val importsSize = imports.size
 val linesBeforeContent = LINES_FN_DECLARATION + imports.size
